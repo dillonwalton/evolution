@@ -1,0 +1,93 @@
+Sub BasicPOSTRequest()
+Dim arrr(4)
+arrr(0) = 1
+arrr(1) = 1
+arrr(2) = 1
+arrr(3) = 1
+For r = 3 To 5
+    Cells(r, 14) = setrate(Cells(1, 1), Format(Cells(r, 2), "yyyy-mm-dd"), Format(Cells(r, 3), "yyyy-mm-dd"), Cells(r, 4), Cells(1, 2), Cells(r, 5), Cells(r, 6), Cells(r, 7), Cells(r, 8), Cells(r, 9), Cells(r, 10), Cells(r, 11), Cells(r, 12), Cells(r, 13), arrr)
+Next
+End Sub
+Function setrate(Name, Startdt, Enddt, Category, RentalID, TypeID, nightly, weekly, monthly, minimumLOS, maximumLOS, maxguests, additionalthres, threshfee, dayspec) As Integer
+    Dim req As New MSXML2.XMLHTTP60
+    Dim reqURL As String
+    Dim tokeetAPIKey As String
+
+    
+    tokeetAPIKey = "4e8f5557-9232-4be7-ab3f-7e53ced0adbf"
+    accountID = "1513824299.46"
+    Dim ds(1)
+    ds(0) = "[{""price"":""120"",""threshold"":4,""days"":[1,2],""thresholdfee"": 20}]"
+    reqURL = "https://capi.tokeet.com/v1/rate?account=1513824299.46"
+    '"{""name"":""John Smith"",""email"":""john@smithg.com""}"
+    payload = "{""name"":" & Chr(34) & Name & Chr(34) & ",""start"":" & Chr(34) & Startdt & Chr(34) & ",""end"":" & Chr(34) & Enddt & Chr(34) & ",""category"":" & Chr(34) & Category & Chr(34) & ",""rental_id"":" & Chr(34) & RentalID & Chr(34) & ",""type"":" & Chr(34) & TypeID & Chr(34) & ",""nightly"":" & nightly & ",""weekly"":" & weekly & ",""monthly"":" & monthly & ",""minimum"":" & minimumLOS & ",""maximum"":" & maximumLOS & ",""maxguests"":" & maxguests & ",""additionalFeeThreshold"":" & additionalthres & ",""additionalFeeAmount"":" & threshfee & ",""dayspecifics"":" & ds(0) & "}"
+        MsgBox (payload)
+ 
+'  "dayspecifics": [{"price": "100","threshold": 4,"days": [1,2],"thresholdfee": 20}]
+
+
+
+
+
+
+    req.Open "POST", reqURL, False
+    req.setRequestHeader "Accept", "application/json"
+    req.setRequestHeader "Content-Type", "application/json"
+    req.setRequestHeader "Authorization", tokeetAPIKey
+
+    req.send payload
+'
+'
+    Dim sr
+    sr = 0
+    If req.Status <> 200 Then
+       MsgBox req.Status & " - " & req.statusText
+       sr = 1
+        Exit Function
+    End If
+
+   Debug.Print (req.Status)
+    setrate = sr
+End Function
+
+
+Sub BasicGETRequest()
+    Dim req As New MSXML2.XMLHTTP60
+    Dim reqURL As String
+    Dim tokeetAPIKey As String
+    
+    reqURL = "https://capi.tokeet.com/v1/expense?account=1513824299.46&limit=10&skip=0&sort=-1"
+    tokeetAPIKey = "4e8f5557-9232-4be7-ab3f-7e53ced0adbf"
+    
+    req.Open "GET", reqURL, False
+    req.setRequestHeader "Authorization", tokeetAPIKey
+    req.send
+    
+    If req.Status <> 200 Then
+        MsgBox req.Status & " - " & req.statusText
+        Exit Sub
+    End If
+
+    Debug.Print (req.Status)
+    
+End Sub
+Sub BasicGETRequest()
+    Dim req As New MSXML2.XMLHTTP60
+    Dim reqURL As String
+    Dim tokeetAPIKey As String
+    
+    reqURL = "https://capi.tokeet.com/v1/expense?account=1513824299.46&limit=10&skip=0&sort=-1"
+    tokeetAPIKey = "4e8f5557-9232-4be7-ab3f-7e53ced0adbf"
+    
+    req.Open "GET", reqURL, False
+    req.setRequestHeader "Authorization", tokeetAPIKey
+    req.send
+    
+    If req.Status <> 200 Then
+        MsgBox req.Status & " - " & req.statusText
+        Exit Sub
+    End If
+
+    Debug.Print (req.Status)
+    
+End Sub
